@@ -4,6 +4,7 @@ from sklearn import metrics
 from sklearn.metrics import precision_score, recall_score
 import seaborn as sns
 import matplotlib.pyplot as plt
+from torch.utils.data.sampler import WeightedRandomSampler
 
 def make_train_step(model, loss_fn, optimizer):
     def train_step_fn(x, y):
@@ -83,3 +84,12 @@ class EarlyStopper:
                 return True
             
         return False
+    
+# WeightedRandomSampler에서 사용할 label 별 weights 계산
+def make_weights(class_vector):
+    classes, class_counts = np.unique(class_vector, return_counts=True)  # class 및 class 별 개수 계산
+    class_weights = 1. / class_counts  # class 별 weight 계산
+    weights_dict = dict(zip(classes, class_weights))
+    weights = [weights_dict[class_vector[i]] for i in range(len(class_vector))]
+    
+    return weights

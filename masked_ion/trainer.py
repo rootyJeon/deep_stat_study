@@ -164,6 +164,11 @@ if __name__ == "__main__":
     valid_data = IonDataset(data_dir, 'valid')
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=2)
     valid_dataloader = DataLoader(valid_data, batch_size=batch_size, shuffle=False)
+    
+    """ # WeightedRandomSampler
+    class_weights = make_weights(train_data.n.numpy())  # weights 게산
+    weighted_sampler = WeightedRandomSampler(class_weights, len(class_weights))  # 계산한 weights로 WeightedRandomSampler 선언
+    train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=2, sampler=weighted_sampler) """
 
     wandb.login()
     wandb.init(project="wandb-ion-project-test",  

@@ -7,7 +7,6 @@ import pandas as pd
 from io import BytesIO
 from PIL import Image # Bytes 로 압축된 이미지를 이미지로 변환하기 위해 필요
 from zipfile import ZipFile # 압축된 데이터 파일 핸들링을 위한 라이브러리
-
 class IonDataset(Dataset):
     def __init__(self, data_dir, mode='train', img_size=(10, 300), n=None, norm_transform=False):
         self.df = pd.read_pickle(os.path.join(data_dir, f"{mode}.pkl"))
