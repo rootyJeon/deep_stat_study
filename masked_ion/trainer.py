@@ -82,67 +82,66 @@ def train_model(train_loader, valid_loader, epochs=100, checkpoint=False, device
             
         train_losses.append(loss)
         
-        # Evaluate train loss
-        if epoch % 10 == 0:
-            print("Epoch:{} / Train loss: {}".format(epoch, loss))
-            
-        # model을 evaluation mode로 설정
-        # disabling dropout and using population statistics for batch normalization
-            model.eval()
+    # Evaluate train loss
+        print("Epoch:{} / Train loss: {}".format(epoch, loss))
+        
+    # model을 evaluation mode로 설정
+    # disabling dropout and using population statistics for batch normalization
+        model.eval()
 
-        # Evaluate valid loss
-            with torch.no_grad():
-                valid_loss = 0
-                cnt = 0
-                for x_valid_batch, y_valid_batch_ion, y_valid_batch_potential in valid_loader:
-                    # 데이터 로더에서 받은 미니배치를 device 에 업로드
-                    x_valid_batch = x_valid_batch.to(device)
-                    y_valid_batch_ion = y_valid_batch_ion.to(device)
-                    y_valid_batch_potential = y_valid_batch_potential.to(device)
-                    
-                    # 미니매치 데이터를 이용해 performance 평가
-                    _, eval_valid_loss_regressor, correct_cnt = valid_step(x_valid_batch, [y_valid_batch_ion, y_valid_batch_potential])
-                    valid_loss += eval_valid_loss_regressor * len(x_valid_batch)
-                    cnt += correct_cnt
-                valid_loss = valid_loss / len(valid_data)
-                valid_losses.append(valid_loss)
-                accuracy = 100 * cnt / len(valid_data)
+    # Evaluate valid loss
+        with torch.no_grad():
+            valid_loss = 0
+            cnt = 0
+            for x_valid_batch, y_valid_batch_ion, y_valid_batch_potential in valid_loader:
+                # 데이터 로더에서 받은 미니배치를 device 에 업로드
+                x_valid_batch = x_valid_batch.to(device)
+                y_valid_batch_ion = y_valid_batch_ion.to(device)
+                y_valid_batch_potential = y_valid_batch_potential.to(device)
                 
-                print("Epoch: {} / Valid MSE loss: {} / Accuracy {} %".format(epoch, valid_loss, accuracy))
-                wandb.log({'valid_MSE_loss': valid_loss}, step=epoch)  
-                wandb.log({'valid_accuracy': accuracy}, step=epoch)
+                # 미니매치 데이터를 이용해 performance 평가
+                _, eval_valid_loss_regressor, correct_cnt = valid_step(x_valid_batch, [y_valid_batch_ion, y_valid_batch_potential])
+                valid_loss += eval_valid_loss_regressor * len(x_valid_batch)
+                cnt += correct_cnt
+            valid_loss = valid_loss / len(valid_data)
+            valid_losses.append(valid_loss)
+            accuracy = 100 * cnt / len(valid_data)
             
-            if checkpoint:
-                checkpoint = {'epochs': epoch,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'train_loss': train_losses,
-                'valid_loss': valid_losses
-                }
+            print("Epoch: {} / Valid MSE loss: {} / Accuracy {} %".format(epoch, valid_loss, accuracy))
+            wandb.log({'valid_MSE_loss': valid_loss}, step=epoch)  
+            wandb.log({'valid_accuracy': accuracy}, step=epoch)
+        
+        if checkpoint:
+            checkpoint = {'epochs': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'train_loss': train_losses,
+            'valid_loss': valid_losses
+            }
 
-                torch.save(checkpoint, 'model_checkpoint.pth')
+            torch.save(checkpoint, 'model_checkpoint.pth')
+            
+            # loss, accuracy 등 특정 metric으로 성능이 가장 좋았던 모델을 직접 저장할 수 있음
+            if valid_loss < best_valid_loss:
+                best_valid_loss = valid_loss
+                torch.save({
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    'epoch': epoch,
+                    }, f"model_lr{lr}_best_loss.ckpt")
+            if accuracy > best_valid_acc:
+                best_valid_acc = accuracy
                 
-                # loss, accuracy 등 특정 metric으로 성능이 가장 좋았던 모델을 직접 저장할 수 있음
-                if valid_loss < best_valid_loss:
-                    best_valid_loss = valid_loss
-                    torch.save({
-                        "model_state_dict": model.state_dict(),
-                        "optimizer_state_dict": optimizer.state_dict(),
-                        'epoch': epoch,
-                        }, f"model_lr{lr}_best_loss.ckpt")
-                if accuracy > best_valid_acc:
-                    best_valid_acc = accuracy
-                    
-                    torch.save({
-                        "model_state_dict": model.state_dict(),
-                        "optimizer_state_dict": optimizer.state_dict(),
-                        'epoch': epoch,
-                        }, f"model_lr{lr}_best_acc.ckpt")
-                    
-            # 학습을 종료 할지에 대한 조건문 (early stopping)
-            if early_stopper(valid_loss):
-                print("\nEarly Stopping!")
-                break
+                torch.save({
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    'epoch': epoch,
+                    }, f"model_lr{lr}_best_acc.ckpt")
+                
+        # 학습을 종료 할지에 대한 조건문 (early stopping)
+        if early_stopper(valid_loss):
+            print("\nEarly Stopping!")
+            break
     return train_losses, valid_losses
 
 if __name__ == "__main__":
