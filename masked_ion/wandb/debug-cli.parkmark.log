@@ -1,0 +1,32 @@
+2023-08-08 23:02:12 INFO Running runs: []
+2023-08-08 23:02:12 INFO Agent received command: run
+2023-08-08 23:02:12 INFO Agent starting run with config:
+	batch_size: 195
+	dropout: 0.4
+	epochs: 34
+	learning_rate: 0.010488023118255484
+	optimizer: adam
+2023-08-08 23:02:12 INFO About to run command: /usr/bin/env python train.py --batch_size=195 --dropout=0.4 --epochs=34 --learning_rate=0.010488023118255484 --optimizer=adam
+2023-08-08 23:02:18 INFO Running runs: ['06oclg81']
+2023-08-08 23:02:18 INFO Cleaning up finished run: 06oclg81
+2023-08-08 23:02:18 INFO Agent received command: run
+2023-08-08 23:02:18 INFO Agent starting run with config:
+	batch_size: 421
+	dropout: 0.5
+	epochs: 10
+	learning_rate: 0.018170660008907286
+	optimizer: sgd
+2023-08-08 23:02:18 INFO About to run command: /usr/bin/env python train.py --batch_size=421 --dropout=0.5 --epochs=10 --learning_rate=0.018170660008907286 --optimizer=sgd
+2023-08-08 23:02:23 INFO Running runs: ['e7uoz65c']
+2023-08-08 23:02:23 INFO Cleaning up finished run: e7uoz65c
+2023-08-08 23:02:24 INFO Agent received command: run
+2023-08-08 23:02:24 INFO Agent starting run with config:
+	batch_size: 483
+	dropout: 0.3
+	epochs: 35
+	learning_rate: 0.022003221233290817
+	optimizer: sgd
+2023-08-08 23:02:24 INFO About to run command: /usr/bin/env python train.py --batch_size=483 --dropout=0.3 --epochs=35 --learning_rate=0.022003221233290817 --optimizer=sgd
+2023-08-08 23:02:29 INFO Running runs: ['5d48cr3s']
+2023-08-08 23:02:29 ERROR Detected 3 failed runs in the first 60 seconds, shutting down.
+2023-08-08 23:02:29 INFO To disable this check set WANDB_AGENT_DISABLE_FLAPPING=true

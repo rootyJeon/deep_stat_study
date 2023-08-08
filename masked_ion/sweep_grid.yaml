@@ -1,7 +1,7 @@
 program: train.py
-method: bayes
+method: grid
 metric: 
-  name: loss
+  name: valid_loss
   goal: minimize
 parameters:
   optimizer:
@@ -15,5 +15,5 @@ parameters:
   epochs:
     min: 10
     max: 40
-  dropout:
-    values: [0.3, 0.4, 0.5]
+  # dropout:
+  #   values: [0.3, 0.4, 0.5]
