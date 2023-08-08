@@ -1,0 +1,19 @@
+program: train.py
+method: bayes
+metric: 
+  name: loss
+  goal: minimize
+parameters:
+  optimizer:
+    values: ['adam', 'sgd']
+  learning_rate:
+    min: 0.001
+    max: 0.1
+  batch_size:
+    min: 128
+    max: 512
+  epochs:
+    min: 10
+    max: 40
+  dropout:
+    values: [0.3, 0.4, 0.5]
