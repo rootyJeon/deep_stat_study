@@ -1,0 +1,23 @@
+# sweep.yaml
+program: train.py
+method: grid
+name: train sweep 
+project: Masked Ion
+entity: yr-park
+metric:
+  name: valid_loss
+  goal: minimize
+parameters:
+  lr:
+    min: 0.0001
+    max: 0.1
+  optimizer:
+    values: ["adam", "sgd"]
+  batch_size:
+    min: 128
+    max: 512 
+  epochs:
+    min: 5
+    max: 40
+  # dropout:  
+  #   values: [0.3, 0.4, 0.5]

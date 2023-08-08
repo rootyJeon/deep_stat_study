@@ -67,7 +67,7 @@ def draw_confusion_matrix(label_list, pred_list):
 
 # simple Early Stopper
 class EarlyStopper:
-    def __init__(self, patience=3, delta=0): 
+    def __init__(self, patience=3, delta=0.01): 
         self.patience = patience  # 이 횟수 보다 성능이 개선되지 않는 경우 학습 종료
         self.val_loss_min = np.Inf
         self.delta = delta  # 성능 개선으로 인정되는 최소 값

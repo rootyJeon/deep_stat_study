@@ -9,6 +9,9 @@ import time
 import wandb
 from tqdm.notebook import tqdm  
 
+# init wandb settings
+run = wandb.init(project="wandb-ion-project-test")
+
 # Config file
 config = {
         "lr": 0.1,
@@ -23,6 +26,8 @@ config = {
         "patience": 3,
         "early_stopper": EarlyStopper
         }
+
+wandb.config.update(config)
 
 loss_classifier = config['loss_classifier']()
 loss_regression = config['loss_regression']()
