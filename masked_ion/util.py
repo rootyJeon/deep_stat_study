@@ -4,7 +4,6 @@ from sklearn import metrics
 from sklearn.metrics import precision_score, recall_score
 import seaborn as sns
 import matplotlib.pyplot as plt
-from torch.utils.data.sampler import WeightedRandomSampler
 
 def make_train_step(model, loss_fn, optimizer):
     def train_step_fn(x, y):
