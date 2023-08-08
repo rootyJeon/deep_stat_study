@@ -1,9 +1,8 @@
 # sweep.yaml
-program: train.py
-method: grid
+program: trainer.py
+method: random
 name: train sweep 
-project: Masked Ion
-entity: yr-park
+project: wandb-ion-project-test
 metric:
   name: valid_loss
   goal: minimize

@@ -9,7 +9,7 @@ from PIL import Image # Bytes 로 압축된 이미지를 이미지로 변환하�
 from zipfile import ZipFile # 압축된 데이터 파일 핸들링을 위한 라이브러리
 
 class IonDataset(Dataset):
-    def __init__(self, data_dir, mode='train', img_size=(10, 300), n=None):
+    def __init__(self, data_dir, mode='train', img_size=(10, 300), n=None, norm_transform=False):
         self.df = pd.read_pickle(os.path.join(data_dir, f"{mode}.pkl"))
 
         if n is not None:  # to extract a specific n
@@ -33,10 +33,16 @@ class IonDataset(Dataset):
 
         self.h, self.w = img_size
         self.crop_size = (10, self.w)
-        self.img_transform = T.Compose([
+        if norm_transform:
+          self.img_transform = T.Compose([
             T.ToTensor(),
+            T.Normalize(0.0503, 0.2186)   # 이미지 정규화
+          ])
+        else:
+          self.img_transform = T.Compose([
+            T.ToTensor(),             
             # T.CenterCrop(self.crop_size),
-        ])
+            ])
 
     def make_one_hot(self, scalar):
         one_hot_dim = self.max_n - self.min_n + 1
