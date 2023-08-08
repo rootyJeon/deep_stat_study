@@ -134,10 +134,10 @@ def train_model(train_loader, valid_loader, epochs=100, checkpoint=False, device
                         'epoch': epoch,
                         }, f"model_lr{lr}_best_acc.ckpt")
                     
-        # 학습을 종료 할지에 대한 조건문 (early stopping)
-        if early_stopper(valid_loss):
-            print("\nEarly Stopping!")
-            break
+            # 학습을 종료 할지에 대한 조건문 (early stopping)
+            if early_stopper(valid_loss):
+                print("\nEarly Stopping!")
+                break
     return train_losses, valid_losses
 
 if __name__ == "__main__":
